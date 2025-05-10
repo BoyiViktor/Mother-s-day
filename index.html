@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>折叠式母亲节贺卡</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap');
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('back.png') no-repeat center center;
+      background-size: cover;
+      font-family: 'ZCOOL XiaoWei', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .card-wrapper {
+      width: 800px;
+      height: 400px;
+      position: relative;
+      perspective: 2000px;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      position: relative;
+    }
+
+    .side {
+      width: 50%;
+      height: 100%;
+      background: rgba(255,255,255,0.85);
+      position: absolute;
+      top: 0;
+      transition: transform 1s ease;
+      transform-origin: left center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .left {
+      left: 0;
+      transform-origin: left center;
+      z-index: 2;
+      background: url('DeWatermark.ai_1746877949059.png') no-repeat center;
+      background-size: cover;
+    }
+
+    .right {
+      right: 0;
+      transform-origin: right center;
+      z-index: 1;
+      background: url('https://th.bing.com/th/id/OIP.UtPGcjakHqzUuLhU___tnwHaHa?w=203&h=202&c=7&r=0&o=5&cb=iwc1&dpr=1.5&pid=1.7') no-repeat center;
+      background-size: cover;
+    }
+
+    .card.open .left {
+      transform: rotateY(-100deg);
+    }
+
+    .card.open .right {
+      transform: rotateY(100deg);
+    }
+
+    .center {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 0;
+      border-radius: 10px;
+      padding: 40px;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+
+    .card.open .center {
+      opacity: 1;
+    }
+
+    .center-content {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      position: relative;
+    }
+
+    .center-text {
+      width: 45%;
+      text-align: left;
+      color: #5b3d2a;
+    }
+
+    .center-text h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #4b2d1e;
+    }
+
+    .center-text p {
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .center-text strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .center-image {
+      width: 40%;
+      text-align: center;
+      position: relative;
+    }
+
+    .center-image img,
+    .center-image video {
+      width: 100%;
+      max-width: 240px;
+      border: 2px solid #a37b60;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .center-image video {
+      display: none;
+    }
+
+    .next-btn {
+      display: none;
+      margin-top: 10px;
+      padding: 6px 12px;
+      background-color: #a37b60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .auto-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #5b3d2a;
+      color: #fff;
+      padding: 6px 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .petal {
+      position: fixed;
+      top: -50px;
+      width: 25px;
+      height: 25px;
+      background-image: url('https://tse1.mm.bing.net/th/id/OIP.6dtlpxdk8lAaY9yF6FSwOwHaHa?cb=iwc1&pid=ImgDet&w=179&h=179&c=7&dpr=1.5');
+      background-size: cover;
+      animation: fall 10s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card-wrapper" onclick="toggleOpen()">
+    <div class="card" id="card">
+      <div class="side left"></div>
+      <div class="side right"></div>
+      <div class="center">
+        <div class="center-content">
+          <div class="center-text">
+            <h1>母亲节快乐</h1>
+            <p>愿您如春风般温柔，<br>如山岳般稳重，<br>如明月般永远照亮我心。</p>
+            <strong>感恩母亲，安康长乐。</strong>
+          </div>
+          <div class="center-image">
+            <img id="motherPhoto" src="719631df5811bf115220a7300bec209.jpg" alt="母亲照片" onclick="nextMedia(event)">
+            <video id="motherVideo" src="453160708391629138efa037b50e3e3a.mp4" controls onclick="event.stopPropagation()"></video>
+            <button class="next-btn" id="nextButton" onclick="nextMedia(event)">下一张</button>
+            <button class="auto-toggle" id="autoToggle" onclick="toggleAutoPlay(event)">开启自动切换</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgm" src="M500003tpqiX2F4wG2.mp3" loop></audio>
+
+  <script>
+    // 花瓣动画
+  for (let i = 0; i < 20; i++) {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDelay = Math.random() * 10 + 's';
+    petal.style.animationDuration = 5 + Math.random() * 5 + 's';
+    document.body.appendChild(petal);
+  }
+
+  let hasOpened = false;
+  function toggleOpen() {
+    const card = document.getElementById('card');
+    card.classList.toggle('open');
+    if (!hasOpened) {
+      document.getElementById('bgm').play().catch(() => {});
+      hasOpened = true;
+    }
+  }
+
+  const mediaSources = [
+    { type: 'img', src: '719631df5811bf115220a7300bec209.jpg' },
+    { type: 'img', src: 'c175367bdef7f175536fa4139bba726.jpg' },
+    { type: 'img', src: '9df4e03bf6c08fe9c4fed3c1a91853d.jpg' },
+    { type: 'video', src: '453160708391629138efa037b50e3e3a.mp4' },
+    { type: 'img', src: '83a062af0070b944c2d632d1bda759d.jpg' },
+    { type: 'video', src: 'fce3d5b2d4abe8ef16a4e2ad6141e4f5.mp4' },
+    { type: 'img', src: 'fba7c0cc6aa06c0054c7229b390d72e.jpg' },
+    { type: 'img', src: '7c52c29f36ad7040ec006553aab5a32.jpg' },
+    { type: 'img', src: '77ec3ff16df9768744e76fffc82e419.jpg' },
+    { type: 'img', src: '038cdd074f543a710edcb330f1eb207.jpg' }
+  ];
+
+  let currentIndex = 0;
+  let autoPlay = false;
+  let autoTimer = null;
+
+  function updateMedia() {
+    const img = document.getElementById('motherPhoto');
+    const video = document.getElementById('motherVideo');
+    const bgm = document.getElementById('bgm');
+    const btn = document.getElementById('nextButton');
+
+    const media = mediaSources[currentIndex];
+
+    if (media.type === 'img') {
+      video.pause();
+      video.style.display = 'none';
+      btn.style.display = 'none';
+
+      img.src = media.src;
+      img.style.display = 'block';
+      bgm.play().catch(() => {});
+    } else {
+      img.style.display = 'none';
+      video.src = media.src;
+      video.style.display = 'block';
+      btn.style.display = 'inline-block';
+      video.play().catch(() => {});
+      bgm.pause();
+
+      video.onended = () => {
+        nextMedia(null);
+      };
+    }
+  }
+
+  function nextMedia(event) {
+    if (event) event.stopPropagation();
+    currentIndex = (currentIndex + 1) % mediaSources.length;
+    updateMedia();
+  }
+
+  function toggleAutoPlay(event) {
+    event.stopPropagation();
+    autoPlay = !autoPlay;
+    const toggleBtn = document.getElementById('autoToggle');
+    toggleBtn.textContent = autoPlay ? '关闭自动切换' : '开启自动切换';
+
+    if (autoPlay) {
+      autoTimer = setInterval(() => {
+        const current = mediaSources[currentIndex];
+        if (current.type === 'img') {
+          nextMedia(null);
+        }
+      }, 5000);
+    } else {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  }
+
+  updateMedia();
+  </script>
+</body>
+</html>
